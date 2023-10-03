@@ -68,11 +68,6 @@ class ArchiveCommand extends Command
         $this
             ->setName('prestashop:archive')
             ->setDescription('Run commands to prepare your module archive. Archive the zip for production')
-            ->addArgument(
-                'real_path',
-                InputArgument::OPTIONAL,
-                'The real path of your module'
-            )
             ->addOption(
                 'exclude',
                 null,
