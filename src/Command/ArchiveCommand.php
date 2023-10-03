@@ -132,10 +132,7 @@ class ArchiveCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($this->fs->exists($this->path . $this->zipName)) {
-            $this->fs->remove($this->path . $this->zipName);
-        }
-
+        $this->removeZip();
         $this->deleteTempFolder($this->toCopyPathFolder);
         $this->copy();
         $this->autoIndex();
@@ -307,5 +304,17 @@ class ArchiveCommand extends Command
         }
 
         return $found;
+    }
+
+    /**
+     * @return void
+     * @author George van Engers <george@dewebsmid.nl>
+     * @since 04-10-2023
+     */
+    private function removeZip(): void
+    {
+        if ($this->fs->exists($this->path . $this->zipName)) {
+            $this->fs->remove($this->path . $this->zipName);
+        }
     }
 }
