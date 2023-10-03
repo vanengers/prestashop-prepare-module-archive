@@ -57,6 +57,10 @@ class ArchiveCommand extends Command
 
     /** @var Filesystem fs */
     private Filesystem $fs;
+    /** @var mixed|string moduleName */
+
+    /** @var string $moduleName */
+    private string $moduleName;
 
     /**
      * @return void
@@ -73,6 +77,13 @@ class ArchiveCommand extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Comma-separated list of folders to exclude from the update',
+                implode(',', self::DEFAULT_FILTERS)
+            )
+            ->addOption(
+                'module',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Module name',
                 implode(',', self::DEFAULT_FILTERS)
             )
             ->addOption(
@@ -101,6 +112,12 @@ class ArchiveCommand extends Command
             $this->path = $input->getOption('path');
         }
         $this->toCopyPathFolder = $this->path . (str_ends_with($this->path, '/') ? '' : '/') . $this->toCopySubDir;
+
+        if (!empty($input->getOption('module'))) {
+            $this->moduleName = $input->getOption('module');
+        } else {
+            $this->moduleName = $this->zipName;
+        }
 
         $this->fs = new Filesystem;
     }
@@ -147,7 +164,7 @@ class ArchiveCommand extends Command
                 $zip->addFile(file_get_contents($absoluteFilePath), $fileNameWithExtension);
             }
 
-            $zip->saveZipFile($this->path . '\\'. $this->zipName);
+            $zip->saveZipFile($this->path . '\\'. $this->moduleName.(str_ends_with($this->moduleName, '.zip') ? '' : '.zip'));
             $zip->finalize();
         }
     }
@@ -197,6 +214,7 @@ class ArchiveCommand extends Command
     {
         $found = $this->findFiles($this->path);
         $this->fs->mkdir($this->toCopyPathFolder);
+        $this->fs->mkdir($this->toCopyPathFolder . '\\' .$this->moduleName);
         foreach($found as $file) {
             $this->doCopy($file);
         }
@@ -212,10 +230,10 @@ class ArchiveCommand extends Command
     private function doCopy(SplFileInfo $file, string $addRelativePath = ''): void
     {
         if ($file->isDir()) {
-            $this->fs->mkdir($this->toCopyPathFolder . '\\' . $addRelativePath . '\\' . $file->getRelativePathname());
+            $this->fs->mkdir($this->toCopyPathFolder . '\\' .$this->moduleName . '\\' . $addRelativePath . '\\' . $file->getRelativePathname());
         }
         else if ($this->isSymlink($file) && empty($addRelativePath)) {
-            $nPath = $this->toCopyPathFolder . '\\' . $addRelativePath . '\\' .$file->getRelativePath();
+            $nPath = $this->toCopyPathFolder . '\\' .$this->moduleName . '\\' . $addRelativePath . '\\' .$file->getRelativePath();
             $rel = $file->getRelativePathname();
             $this->fs->mkdir($nPath);
             $files = $this->findFiles($file);
@@ -225,7 +243,7 @@ class ArchiveCommand extends Command
         }
         else {
             try {
-                $this->fs->copy($file->getRealPath(), $this->toCopyPathFolder . '\\' . $addRelativePath . '\\' . $file->getRelativePathname());
+                $this->fs->copy($file->getRealPath(), $this->toCopyPathFolder . '\\' .$this->moduleName . '\\' . $addRelativePath . '\\' . $file->getRelativePathname());
             }
             catch (Throwable $e) {
                 var_dump($e->getMessage());
@@ -264,7 +282,7 @@ class ArchiveCommand extends Command
      */
     private function composerUpdate(): void
     {
-        exec('composer update --no-dev --working-dir='.$this->toCopyPathFolder);
+        exec('composer update --no-dev --working-dir='.$this->toCopyPathFolder. '\\' .$this->moduleName);
     }
 
     /**
