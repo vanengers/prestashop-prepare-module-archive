@@ -3,7 +3,7 @@ Prepare module for addons / validator upload.
 It will update composer within the production environment. (--no-dev parameter)
 
 ## Install
-`` composer require --dev prestashop/prestashop-prepare-module-archive``
+`` composer require --dev vanengers/prestashop-prepare-module-archive``
 
 ## Useage
 `` php vendor/bin/archive --module=MODULE_NAME``
