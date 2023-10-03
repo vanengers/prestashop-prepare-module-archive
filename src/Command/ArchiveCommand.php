@@ -160,7 +160,7 @@ class ArchiveCommand extends Command
             foreach($files as $file) {
                 $absoluteFilePath = $file->getRealPath();
                 $fileNameWithExtension = $file->getRelativePathname();
-                $zipper->addFile($absoluteFilePath, $fileNameWithExtension);
+                $zipper->addFile($absoluteFilePath, str_replace('\\','/',$fileNameWithExtension));
             }
 
             $zipper->close();
@@ -314,8 +314,8 @@ class ArchiveCommand extends Command
      */
     private function removeZip(): void
     {
-        if ($this->fs->exists($this->path . $this->zipName)) {
-            $this->fs->remove($this->path . $this->zipName);
+        if ($this->fs->exists($this->path . '/'. $this->zipName)) {
+            $this->fs->remove($this->path . '/'. $this->zipName);
         }
     }
 }
