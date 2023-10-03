@@ -22,9 +22,7 @@ declare(strict_types=1);
 namespace Vanengers\PrestashopPrepareModuleArchive\Command;
 
 use PHPZip\Zip\File\Zip;
-use PHPZip\Zip\Stream\ZipStream;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,8 +30,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
 
@@ -41,24 +37,32 @@ class ArchiveCommand extends Command
 {
     const DEFAULT_FILTERS = [];
 
-    /**
-     * List of folders to exclude from the search
-     *
-     * @var array<int, string>
-     */
-    private $filters;
-    /** @var mixed path */
-    private $path;
+    /** @var array $filters */
+    private array $filters;
+
+    /** @var string $path */
+    private string $path;
+
     /** @var OutputInterface output */
-    private $output;
+    private OutputInterface $output;
 
     /** @var string toCopyPathFolder */
-    private $toCopyPathFolder = 'temp_copy';
-    private $toCopySubDir = 'temp_copy';
-    private $zipName = 'archive.zip';
-    /** @var Filesystem fs */
-    private $fs;
+    private string $toCopyPathFolder = 'temp_copy';
 
+    /** @var string $toCopySubDir */
+    private string $toCopySubDir = 'temp_copy';
+
+    /** @var string $zipName */
+    private string $zipName = 'archive.zip';
+
+    /** @var Filesystem fs */
+    private Filesystem $fs;
+
+    /**
+     * @return void
+     * @author George van Engers <george@dewebsmid.nl>
+     * @since 03-10-2023
+     */
     protected function configure(): void
     {
         $this
@@ -96,9 +100,10 @@ class ArchiveCommand extends Command
     {
         $this->output = $output;
         $this->filters = explode(',', $input->getOption('exclude'));
-        $this->path = $input->getOption('path');
-        if (empty($this->path)) {
+        if (empty($input->getOption('path'))) {
             $this->path = realpath('.');
+        } else {
+            $this->path = $input->getOption('path');
         }
         $this->toCopyPathFolder = $this->path . (str_ends_with($this->path, '/') ? '' : '/') . $this->toCopySubDir;
 
@@ -121,7 +126,7 @@ class ArchiveCommand extends Command
 
         $this->deleteTempFolder($this->toCopyPathFolder);
         $this->copy();
-        $this->autoindex();
+        $this->autoIndex();
         $this->composerUpdate();
         $this->zip();
         $this->deleteTempFolder($this->toCopyPathFolder);
@@ -134,7 +139,7 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function zip()
+    private function zip(): void
     {
         ob_start();
         $zip = new Zip(true);
@@ -158,10 +163,10 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function getAllFilesRecursive($dir)
+    private function getAllFilesRecursive($dir): Finder
     {
         $finder = new Finder();
-        $found = $finder->files()
+        return $finder->files()
             ->in($dir)
             ->exclude($this->filters)
             ->ignoreDotFiles(true)
@@ -170,10 +175,7 @@ class ArchiveCommand extends Command
             ->exclude('.git')
             ->exclude('.idea')
             ->notName('README.md')
-            ->notName('composer.lock')
-        ;
-
-        return $found;
+            ->notName('composer.lock');
     }
 
     /**
@@ -182,7 +184,7 @@ class ArchiveCommand extends Command
      * @since 03-10-2023
      * @author George van Engers <george@dewebsmid.nl>
      */
-    private function autoindex()
+    private function autoIndex(): void
     {
         $input = new ArrayInput([
             'command' => 'prestashop:add:index',
@@ -196,7 +198,7 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function copy()
+    private function copy(): void
     {
         $found = $this->findFiles($this->path);
         $this->fs->mkdir($this->toCopyPathFolder);
@@ -207,12 +209,12 @@ class ArchiveCommand extends Command
 
     /**
      * @param SplFileInfo $file
-     * @param $addRelativePath
+     * @param string $addRelativePath
      * @return void
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function doCopy(SplFileInfo $file, $addRelativePath = '')
+    private function doCopy(SplFileInfo $file, string $addRelativePath = ''): void
     {
         if ($file->isDir()) {
             $this->fs->mkdir($this->toCopyPathFolder . '\\' . $addRelativePath . '\\' . $file->getRelativePathname());
@@ -243,7 +245,7 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function isSymlink(SplFileInfo $file)
+    private function isSymlink(SplFileInfo $file): bool
     {
         $absPathOrg = $this->path . '\\' .$file->getRelativePathname();
         return !str_contains($absPathOrg, $file->getRealPath());
@@ -255,7 +257,7 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function deleteTempFolder(string $toCopyPathFolder)
+    private function deleteTempFolder(string $toCopyPathFolder): void
     {
         $this->fs->remove($toCopyPathFolder);
     }
@@ -265,7 +267,7 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function composerUpdate()
+    private function composerUpdate(): void
     {
         exec('composer update --no-dev --working-dir='.$this->toCopyPathFolder);
     }
@@ -276,7 +278,7 @@ class ArchiveCommand extends Command
      * @author George van Engers <george@dewebsmid.nl>
      * @since 03-10-2023
      */
-    private function findFiles($path)
+    private function findFiles($path): Finder
     {
         $finder = new Finder();
         $found = $finder->in($path instanceof SplFileInfo ? $path->getRealPath() : $path)

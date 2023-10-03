@@ -18,8 +18,7 @@
         "php": "^8.0 || ^7.2",
         "symfony/console": "^3.4 || ~4.0 || ~5.0 || ~6.0",
         "symfony/finder": "^3.4 || ~4.0 || ~5.0 || ~6.0",
-        "prestashop/php-dev-tools": "^4.3.0",
-        "vanengers/prestashop-lib-module": "@dev"
+        "prestashop/php-dev-tools": "^4.3.0"
     },
     "bin": [
         "bin/archive"
@@ -31,12 +30,5 @@
         "platform": {
             "php": "8.1"
         }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "C:\\_GIT\\prestashop-lib-module",
-            "symlink": false
-        }
-    ]
+    }
 }
