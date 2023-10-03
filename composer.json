@@ -1,0 +1,42 @@
+{
+    "name": "vanengers/prestashop-prepare-module-archive",
+    "description": "Prepare module for addons / validator upload",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Vanengers\\PrestashopPrepareModuleArchive\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "George van Engers",
+            "email": "vanengers@gmail.com"
+        }
+    ],
+    "require": {
+        "phpzip/phpzip": "^2.0",
+        "php": "^8.0 || ^7.2",
+        "symfony/console": "^3.4 || ~4.0 || ~5.0 || ~6.0",
+        "symfony/finder": "^3.4 || ~4.0 || ~5.0 || ~6.0",
+        "prestashop/php-dev-tools": "^4.3.0",
+        "vanengers/prestashop-lib-module": "@dev"
+    },
+    "bin": [
+        "bin/archive"
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "prepend-autoloader": false,
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "8.1"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "C:\\_GIT\\prestashop-lib-module",
+            "symlink": false
+        }
+    ]
+}
