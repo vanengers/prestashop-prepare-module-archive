@@ -32,6 +32,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Throwable;
+use ZipArchive;
 
 class ArchiveCommand extends Command
 {
@@ -151,18 +152,18 @@ class ArchiveCommand extends Command
     private function zip(): void
     {
         ob_start();
-        $zip = new Zip(true);
+        $zipper = new ZipArchive();
+        $zipper->open($this->path . '\\'. $this->moduleName.(str_ends_with($this->moduleName, '.zip') ? '' : '.zip'),ZipArchive::CREATE);
 
         $files = $this->getAllFilesRecursive($this->toCopyPathFolder);
         if ($files->hasResults()) {
             foreach($files as $file) {
                 $absoluteFilePath = $file->getRealPath();
                 $fileNameWithExtension = $file->getRelativePathname();
-                $zip->addFile(file_get_contents($absoluteFilePath), $fileNameWithExtension);
+                $zipper->addFile($absoluteFilePath, $fileNameWithExtension);
             }
 
-            $zip->saveZipFile($this->path . '\\'. $this->moduleName.(str_ends_with($this->moduleName, '.zip') ? '' : '.zip'));
-            $zip->finalize();
+            $zipper->close();
         }
     }
 
