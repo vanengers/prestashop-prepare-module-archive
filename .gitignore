@@ -154,7 +154,6 @@ themes/default-bootstrap/modules/*/mails/*
 
 # Symfony
 
-/bin/
 /app/Resources/geoip/GeoLite2-City.mmdb
 /app/Resources/translations/*
 !/app/Resources/translations/default
