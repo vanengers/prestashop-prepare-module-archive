@@ -1,9 +1,7 @@
 name: Release with commit
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
+
 jobs:
   release:
     runs-on: ubuntu-latest
