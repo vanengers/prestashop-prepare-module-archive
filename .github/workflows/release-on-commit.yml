@@ -8,11 +8,11 @@ jobs:
     steps:
       - uses: ChanTsune/release-with-commit@v2.8.0
         with:
-            regexp: "Release ((\\d+([.]\\d+)*)(( )(\\-+))((\\s|\\S)*))"
+            regexp: "Release ((\\d+([.]\\d+)*) - ((\\s|\\S)*))"
             regexp_options: "us"
-            release_name: "version $1"
-            tag_name: "v$1"
-            body: "$5"
+            release_name: "version $2"
+            tag_name: "v$2"
+            body: "$4"
             draft: false
             prerelease: false
         env:
