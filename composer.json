@@ -2,6 +2,7 @@
     "name": "vanengers/prestashop-prepare-module-archive",
     "description": "Prepare module for addons / validator upload",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Vanengers\\PrestashopPrepareModuleArchive\\": "src/"
