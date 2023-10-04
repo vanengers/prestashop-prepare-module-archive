@@ -300,7 +300,7 @@ class ArchiveCommand extends Command
             ->exclude($this->toCopySubDir);
 
         if ($path instanceof SplFileInfo) {
-            // we probably are in symlinked composer package, so lets skip the vendor folder
+            // we probably are in symlinked composer package, so lets skip the vendor folder for the symlinked
             $found = $found->exclude('vendor');
         }
 
