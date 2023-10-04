@@ -292,7 +292,6 @@ class ArchiveCommand extends Command
     private function findFiles($path): Finder
     {
         $finder = new Finder();
-
         $found = $finder
             ->in($path instanceof SplFileInfo ? $path->getRealPath() : $path)
             ->exclude($this->filters)
