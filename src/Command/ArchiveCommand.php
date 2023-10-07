@@ -65,7 +65,7 @@ class ArchiveCommand extends Command
 
     /**
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     protected function configure(): void
@@ -100,7 +100,7 @@ class ArchiveCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     protected function initialize(InputInterface $input, OutputInterface $output): void
@@ -129,7 +129,7 @@ class ArchiveCommand extends Command
      * @return int
      * @throws Throwable
      * @since 03-10-2023
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -146,7 +146,7 @@ class ArchiveCommand extends Command
 
     /**
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function zip(): void
@@ -170,7 +170,7 @@ class ArchiveCommand extends Command
     /**
      * @param $dir
      * @return Finder
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function getAllFilesRecursive($dir): Finder
@@ -192,7 +192,7 @@ class ArchiveCommand extends Command
      * @return void
      * @throws Throwable
      * @since 03-10-2023
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      */
     private function autoIndex(): void
     {
@@ -205,7 +205,7 @@ class ArchiveCommand extends Command
 
     /**
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function copy(): void
@@ -222,7 +222,7 @@ class ArchiveCommand extends Command
      * @param SplFileInfo $file
      * @param string $addRelativePath
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function doCopy(SplFileInfo $file, string $addRelativePath = ''): void
@@ -253,7 +253,7 @@ class ArchiveCommand extends Command
     /**
      * @param SplFileInfo $file
      * @return boolean
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function isSymlink(SplFileInfo $file): bool
@@ -265,7 +265,7 @@ class ArchiveCommand extends Command
     /**
      * @param string $toCopyPathFolder
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function deleteTempFolder(string $toCopyPathFolder): void
@@ -275,7 +275,7 @@ class ArchiveCommand extends Command
 
     /**
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function composerUpdate(): void
@@ -286,7 +286,7 @@ class ArchiveCommand extends Command
     /**
      * @param $path
      * @return Finder
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 03-10-2023
      */
     private function findFiles($path): Finder
@@ -310,7 +310,7 @@ class ArchiveCommand extends Command
 
     /**
      * @return void
-     * @author George van Engers <george@dewebsmid.nl>
+     * @author George van Engers <vanengers@gmail.com>
      * @since 04-10-2023
      */
     private function removeZip(): void
